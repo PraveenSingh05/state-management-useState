@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+<script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    // Your  code will go here
+    function FormCom() {
+        const [formState, setformState] = React.useState([]);
+        function addHobby() {
+            setformState([...formState, { id: Date.now(), hobby: document.getElementById("hobbyInput").value }])
+            document.getElementById("hobbyInput").value = "";
+            console.log(formState);
+        }
+
+        function deleteHobby(e) {
+            console.log(e.target.id);
+
+            setformState(formState.filter((indx) => {
+                if (indx.id != e.target.id) {
+                    return indx;
+                }
+            }
+            ))
+        }
+
+        return (<>
+            <input type="text" placeholder="Enter your hobboy" id="hobbyInput" />
+            <button onClick={addHobby}>Add</button>
+            <ShowHobbies hobbyList={formState} deleteFunc={deleteHobby} />
+        </>)
+    }
+
+    function ShowHobbies(props) {
+        if (props.hobbyList.length == 0) {
+            return <h2>You don't have any hobby Please add</h2>
+        }
+        return (
+            <>
+                <ul>All Hobbies
+                    {props.hobbyList.map((itm) => {
+                        return (<>
+                            <li key={itm.id}>{itm.hobby} <button id={itm.id} onClick={props.deleteFunc}>❌</button></li>
+                        </>)
+                    })}
+                </ul>
+            </>
+        )
+    }
+
+    function App() {
+        return (
+            <>
+                <FormCom />
+            </>
+        )
+    }
+
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+
+</html>
