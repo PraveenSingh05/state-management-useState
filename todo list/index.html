@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Template</title>
+
+  <style>
+    .todo {
+      margin: 10px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .main {
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .main table{
+      width: 100%;
+      border: 1px solid black;
+    }
+    .main tr {
+      border: 1px solid gray;
+      padding: 25px;
+      width: 100%;
+    }
+
+    .main tr:nth-child(even){
+      background-color: rgba(0, 255, 255, 0.354);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+<script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+  // Your  code will go here
+
+  function ShowTodoList(props) {
+
+    let listData = props.todoList;
+
+    
+    return (<div className="todoList">
+      <h2>All Todo</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Sl No.</th>
+            <th>Task</th>
+            <th>Mark</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {listData.length==0?<p>No data found</p>:listData.map((itm, indx) => {
+            return (
+
+              <tr className="todo" key={indx}>
+                <td>{indx+1}</td>
+                <td>{itm.todo}</td>
+                <td>{itm.isComplete ? <button onClick={props.markComplete} data-iscompleteid={itm.id} style={{ color: "green", border: "1px solid green" }}>Complete</button> : <button onClick={props.markComplete} data-iscompleteid={itm.id} style={{ color: "red", border: "1px solid red" }}>Panding</button>}</td>
+                <td>{<button onClick={props.deletTodo} data-removeid={itm.id}>Remove</button>}</td>
+              </tr>
+
+            )
+          })}
+          
+
+        </tbody>
+      </table>
+    </div>);
+  }
+
+  function App() {
+    const [todoList, settodoList] = React.useState([]);
+    const [temptodoList, settemptodoList] = React.useState([]);
+    const [filterCondition, setfilterCondition] = React.useState("All Todo");
+
+
+    function addTodo(e) {
+      let newData = [...temptodoList, { id: Date.now(), todo: document.getElementById("todoInput").value, isComplete: false }];
+      settodoList(newData)
+      document.getElementById("todoInput").value = "";
+      setfilterCondition("All Todo");
+      settemptodoList(newData);
+
+    }
+
+    function deletTodo(e) {
+      console.log("This is remove id" + e.target.getAttribute("data-removeid"))
+      let newList = todoList.filter((indx) => {
+        if (indx.id == Number(e.target.getAttribute("data-removeid"))) {
+          console.log(indx.id)
+          return false;
+        } else {
+          return true;
+        }
+      })
+      settodoList(newList);
+      settemptodoList(newList);
+    }
+
+    function markComplete(e) {
+      console.log(e.target.getAttribute("data-iscompleteid"))
+
+      let newList = todoList.map((itm) => {
+        if (itm.id == Number(e.target.getAttribute("data-iscompleteid"))) {
+          return { ...itm, isComplete: !itm.isComplete }
+        } else {
+          return itm;
+        }
+      })
+      settodoList(newList);
+      settemptodoList(newList);
+    }
+
+    let listData = todoList;
+
+    function filterTodo() {
+      if (filterCondition == "All Todo") {
+        listData = temptodoList.filter((itm) => {
+          if (itm.isComplete == true) {
+            return true
+          }
+        })
+        setfilterCondition("Complete Todo");
+      } else if (filterCondition == "Complete Todo") {
+        listData = temptodoList.filter((itm) => {
+          if (itm.isComplete == false) {
+            return true
+          }
+        })
+        setfilterCondition("Panding Todo");
+      } else {
+        listData = temptodoList;
+        setfilterCondition("All Todo");
+      }
+      console.log(listData);
+
+      settodoList(listData);
+
+
+
+    }
+
+
+
+
+
+    return (<main className="main">
+      <input type="text" placeholder="Enter your todo" id="todoInput" /><button onClick={addTodo}>Add Todo</button>
+      <button onClick={filterTodo}>{filterCondition}</button>
+      <ShowTodoList todoList={todoList} deletTodo={deletTodo} markComplete={markComplete} filterCondition={filterCondition} setfilterCondition={setfilterCondition} />
+    </main>)
+  }
+
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />)
+
+
+</script>
+
+</html>
