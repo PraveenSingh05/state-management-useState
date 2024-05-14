@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Template</title>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+<script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+  // Your  code will go here
+
+  function ColorApp() {
+    const [color, setcolor] = React.useState("#000000");
+
+    function changeColor(event) {
+      setcolor(event.target.value)
+    }
+
+    return (
+      <>
+        <input type="text" value={color} onChange={changeColor} placeholder="Enter a color code" />
+        <ShowColor color={color} />
+      </>
+    )
+  }
+
+  function ShowColor(props) {
+    var pattern = new RegExp("^#([a-fA-F0-9]){3}$|[a-fA-F0-9]{6}$");
+  
+    // if(pattern.test(str)) {
+    console.log(pattern.test(props.color));
+    if (!pattern.test(props.color)) {
+      return (<>
+        <div style={{ width: "250px", height: "250px", margin: "auto", fontSize:"22px" }}>Sorry Invalid Color Code</div>
+      </>)
+    }
+    return (
+      <>
+        <div style={{ width: "250px", height: "250px", backgroundColor: props.color, margin: "auto", border:"1px solid gray" }}></div>
+      </>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<ColorApp />);
+</script>
+
+</html>
