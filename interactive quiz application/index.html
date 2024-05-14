@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Template</title>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+<script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+  // Your  code will go here
+
+
+  function ShowResult(props){
+    console.log("I am working...")
+    // console.log(props.ansList)
+    // console.log(props.questionsList)
+    let rightList = [];
+    let wrongList = [];
+    let totalCurrectAnswer = 0;
+    let totalWrongAnswer = 0;
+    let totalQuestionAttend = 0;
+    let totalScoreCal = 0;
+
+    for (let i=0; i<props.ansList.length; i++){
+      for(let j=0; j<props.questionsList.length; j++){
+        console.log("Tring..")
+        if(props.ansList[i].id==props.questionsList[j].id){
+          console.log("Got q and a")
+          if(props.ansList[i].option==props.questionsList[j].correct_answer){
+            rightList.push(props.questionsList[j]);
+            totalScoreCal+=5;
+            
+            totalCurrectAnswer+=1;
+          }
+          else{
+            wrongList.push(props.questionsList[j]);
+            totalWrongAnswer+=1;
+          }
+          totalQuestionAttend+=1;
+        }
+      }
+    }
+
+    props.scoreFunc(totalScoreCal);
+
+    console.log(rightList)
+    console.log(wrongList)
+    
+
+    return (
+      <div style={{textAlign:"center", backgroundColor:"gray", padding:"50px",color:"white"}}>
+          <h1>Score Board</h1>
+          <div>
+            <p>Total Sore: {props.totalScore}</p>
+            <p>Total Question Attend: {totalQuestionAttend}</p>
+            <p>Total Right Answer: {totalCurrectAnswer}</p>
+            <p>Total Wrong Answer: {totalWrongAnswer}</p>
+            </div>
+        </div>
+    )
+  }
+
+  function Quiz() {
+    let list = [
+      {
+        "id": 1,
+        "question": "What is JSX in React?",
+        "options": {
+          "a": "JavaScript XML",
+          "b": "JavaScript Extension",
+          "c": "JavaScript Syntax Extension",
+          "d": "JavaScript XML Syntax"
+        },
+        "correct_answer": "a"
+      },
+      {
+        "id": 2,
+        "question": "What does the useState hook in React do?",
+        "options": {
+          "a": "It allows you to define variables that persist for the lifetime of the component.",
+          "b": "It provides a way to access and modify the state of a functional component.",
+          "c": "It creates a stateful class component.",
+          "d": "It is used for routing in React applications."
+        },
+        "correct_answer": "b"
+      },
+      {
+        "id": 3,
+        "question": "Which lifecycle method is used to perform side effects in a functional component?",
+        "options": {
+          "a": "componentDidMount",
+          "b": "componentDidUpdate",
+          "c": "componentWillUnmount",
+          "d": "useEffect"
+        },
+        "correct_answer": "d"
+      },
+      {
+        "id": 4,
+        "question": "What is the purpose of React Router?",
+        "options": {
+          "a": "To manage the state of React components",
+          "b": "To create reusable React components",
+          "c": "To provide routing and navigation functionalities in a React application",
+          "d": "To perform HTTP requests in a React application"
+        },
+        "correct_answer": "c"
+      },
+      {
+        "id": 5,
+        "question": "In React, what is the purpose of the props object?",
+        "options": {
+          "a": "It is used to store component's internal state.",
+          "b": "It is used to pass data from parent to child components.",
+          "c": "It is used to access the global state of the application.",
+          "d": "It is used to handle events within a component."
+        },
+        "correct_answer": "b"
+      },
+      {
+        "id": 6,
+        "question": "What is the key benefit of using Redux in a React application?",
+        "options": {
+          "a": "Simplifies component lifecycle management",
+          "b": "Provides a centralized store for application state",
+          "c": "Enhances component rendering performance",
+          "d": "Facilitates server-side rendering in React applications"
+        },
+        "correct_answer": "b"
+      },
+      {
+        "id": 7,
+        "question": "In React, what is the purpose of the className attribute?",
+        "options": {
+          "a": "It specifies the name of the component class.",
+          "b": "It sets the CSS class of a DOM element rendered by a React component.",
+          "c": "It defines the internal class methods of a React component.",
+          "d": "It is used to pass class-specific props to child components."
+        },
+        "correct_answer": "b"
+      },
+      {
+        "id": 8,
+        "question": "Which of the following is NOT a valid way to conditionally render content in React?",
+        "options": {
+          "a": "Using the ternary operator",
+          "b": "Using the if statement within JSX",
+          "c": "Using the switch statement within JSX",
+          "d": "Using logical operators like && or ||"
+        },
+        "correct_answer": "c"
+      },
+      {
+        "id": 9,
+        "question": "What is the purpose of the key prop in React?",
+        "options": {
+          "a": "It is used to uniquely identify a component in an array of components.",
+          "b": "It defines the initial state of a component.",
+          "c": "It specifies the component's position in the component tree.",
+          "d": "It is used to define a CSS class for a component."
+        },
+        "correct_answer": "a"
+      },
+      {
+        "id": 10,
+        "question": "Which of the following is NOT a valid way to create a React component?",
+        "options": {
+          "a": "Class Component",
+          "b": "Function Component",
+          "c": "Arrow Component",
+          "d": "Higher-Order Component"
+        },
+        "correct_answer": "c"
+      }
+    ]
+
+
+    const [questionsList, setquestionsList] = React.useState(list);
+    const [answerList, setanswerList] = React.useState([]);
+    const [totalScore, settotalScore] = React.useState(0);
+
+    function saveAnswer(e){
+      e.preventDefault()
+      let ansList = [];
+      for(let i=0; i<questionsList.length; i++){
+        try{
+          console.log(document.querySelector(`input[name="${questionsList[i].id}"]:checked`).value, document.querySelector(`input[name="${questionsList[i].id}"]:checked`).getAttribute("data-questionid"));
+          ansList.push({id:document.querySelector(`input[name="${questionsList[i].id}"]:checked`).getAttribute("data-questionid"), option:document.querySelector(`input[name="${questionsList[i].id}"]:checked`).value});
+        }catch{
+          console.log("Not attend..")
+        }
+      }
+
+      console.log("This is...")
+      console.log(ansList)
+      setanswerList(ansList)
+    }
+
+    function resetFunc(){
+      setanswerList([]);
+      settotalScore(0);
+    }
+
+    if(answerList.length){
+      return (<>
+      <ShowResult ansList={answerList} questionsList={questionsList} scoreFunc={settotalScore} totalScore={totalScore}/>
+      <div style={{textAlign:"center",padding:"30px"}}><button onClick={resetFunc} style={{fontSize:"22px"}}>Reset</button></div>
+      </>)
+    }
+
+
+    return (<>
+    
+      <form style={{padding:"25px"}} onSubmit={saveAnswer}>
+
+        {questionsList.map((itm, indx) => {
+          return (<div key={itm.id}>
+            <p style={{ fontSize: "22px" }}>{indx+1}. {itm.question}</p>
+            <label for={itm.id+"a"}>
+              <input type="radio" name={itm.id} id={itm.id+"a"} value="a" data-questionid={itm.id}/>a. {itm.options.a}
+            </label><br/><br/>
+            <label for={itm.id+"b"}>
+              <input type="radio" name={itm.id} id={itm.id+"b"} value="b" data-questionid={itm.id}/>b. {itm.options.b}
+            </label><br/><br/>
+            <label for={itm.id+"c"}>
+              <input type="radio" name={itm.id} id={itm.id+"c"} value="c" data-questionid={itm.id}/>c. {itm.options.c}
+            </label><br/><br/>
+            <label for={itm.id+"d"}>
+              <input type="radio" name={itm.id} id={itm.id+"d"} value="d" data-questionid={itm.id}/>d. {itm.options.d}
+            </label><br/><br/>
+
+          </div>);
+        })}
+
+
+
+        <button type="submit">Submit</button>
+      </form>
+    </>)
+  }
+
+  function App() {
+    return (
+      <>
+        <Quiz />
+      </>
+    )
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />)
+</script>
+
+</html>
